@@ -23,7 +23,7 @@ public class LoanCreateReponse {
     private LocalDate createDate;
     private LocalDate paymentDate ;
     private String status;
-    private UserCreateResponse UserInfor;
+    private User user;
 
 
 
