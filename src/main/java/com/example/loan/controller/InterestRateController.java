@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/interestrate")
+@RequestMapping("/intessasasrestrate")
 public class InterestRateController {
     public final InterestRateService interestrateService;
 
