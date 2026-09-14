@@ -30,12 +30,4 @@ public class InterestRate {
         }
     }
 
-    @Override
-    public String toString() {
-        return "Interest_rate{" +
-                "id=" + id +
-                ", interestRate='" + interestRate + '\'' +
-                ", month='" + month + '\'' +
-                '}';
-    }
 }

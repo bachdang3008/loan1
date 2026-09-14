@@ -38,8 +38,8 @@ public class Loan {
     @Column(name = "amount_payable")
     private double amountPayable;
 
-    @Column(name = " Monthly_payment_amount" )
-    private double MonthlyPaymentAmount;
+    @Column(name = " monthly_payment_amount" )
+    private double monthlyPaymentAmount;
 
 
     @Column(name = "create_date")
@@ -48,13 +48,13 @@ public class Loan {
     @Column(name = "payment_date")
     private LocalDate paymentDate;
 
-    @Column(name = "id_cccd")
+    @Column(name = "cccd")
     private String cccd;
 
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
-    private User userid;
+    private User user;
 
     @Column(name = "status")
     private String status;

@@ -2,6 +2,8 @@ package com.example.loan.response;
 
 import lombok.*;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @Builder
@@ -14,4 +16,5 @@ public class UserCreateResponse {
     private String address;
     private String phone;
     private int age;
+    private Set<String> roles;
 }

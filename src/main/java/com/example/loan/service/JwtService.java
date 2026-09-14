@@ -5,8 +5,11 @@ import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
+import java.util.StringJoiner;
+
 @Service
 public class JwtService {
 
@@ -21,6 +24,7 @@ public class JwtService {
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getUsername())
                 .claim("userId", user.getId())
+                .claim("scope", buildScope(user))
                 .issueTime(issueTime)
                 .expirationTime(expirationTime)
                 .build();
@@ -58,5 +62,13 @@ public class JwtService {
             throw new RuntimeException(e);
         }
         return jwsObject.serialize();
+    }
+
+    private String buildScope(User user) {
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        if(!CollectionUtils.isEmpty(user.getRoles())){
+            user.getRoles().forEach(stringJoiner::add);
+        }
+        return stringJoiner.toString();
     }
 }

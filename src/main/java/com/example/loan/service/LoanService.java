@@ -7,15 +7,13 @@ import com.example.loan.reponsitory.InterestRateReponsitory;
 import com.example.loan.reponsitory.LoanReponsitory;
 import com.example.loan.reponsitory.UserReponsitory;
 import com.example.loan.request.LoanCreateRequest;
-import com.example.loan.response.LoanCreateReponse;
-import com.example.loan.response.UserCreateResponse;
+import com.example.loan.response.LoanCreateResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,8 +24,8 @@ public class LoanService {
     public final UserReponsitory userReponsitory;
 
     @Transactional
-    public LoanCreateReponse createLoan(LoanCreateRequest loanCreateRequest) {
-        User user = userReponsitory.findUsersById(loanCreateRequest.getId())
+    public LoanCreateResponse createLoan(LoanCreateRequest loanCreateRequest, Long userId) {
+        User user = userReponsitory.findUsersById(userId)
                 .orElseThrow(()-> new RuntimeException("User not found"));
         InterestRate interestRateEntity = interestRateReponsitory.findByMonth(loanCreateRequest.getMonth())
                 .orElseThrow(()-> new RuntimeException(("\"Term/interest rate not found for the number of months: " + loanCreateRequest.getMonth())));
@@ -35,7 +33,7 @@ public class LoanService {
         String interestRateStr = interestRateEntity.getInterestRate();
         double interestRate = Double.parseDouble(interestRateStr.replace("%", "").trim());
 
-        double loanAmount = Double.parseDouble(loanCreateRequest.getLoanamount());
+        double loanAmount = Double.parseDouble(loanCreateRequest.getLoanAmount());
         int month = Integer.parseInt(loanCreateRequest.getMonth());
 
 
@@ -51,71 +49,55 @@ public class LoanService {
                 .interestRate(interestRate)
                 .cccd(loanCreateRequest.getCccd())
                 .amountPayable(amountPayable)
-                .MonthlyPaymentAmount(MonthlyPaymentAmount)
+                .monthlyPaymentAmount(MonthlyPaymentAmount)
                 .createDate(createDate)
                 .paymentDate(paymentDate)
                 .status("Pending")
+                .user(user)
                 .build();
 
-        UserCreateResponse userCreateResponse = UserCreateResponse.builder()
-                .email(user.getEmail())
-                .name(user.getName())
-                .phone(user.getPhone())
-                .age(user.getAge())
-                .address(user.getAddress())
-                .build();
 
 
         loanReponsitory.save(loan);
 
-        return LoanCreateReponse.builder()
+        return LoanCreateResponse.builder()
                 .loanAmount(String.valueOf(loan.getLoanAmount()))
                 .month(loan.getMonth())
                 .cccd(loan.getCccd())
                 .interestRate(loan.getInterestRate())
                 .amountPayable(loan.getAmountPayable())
-                .MonthlyPaymentAmount(loan.getMonthlyPaymentAmount())
+                .monthlyPaymentAmount(loan.getMonthlyPaymentAmount())
                 .createDate(loan.getCreateDate())
                 .paymentDate(loan.getPaymentDate())
                 .status(loan.getStatus())
-                .UserInfor(userCreateResponse)
+                .user(user)
                 .build();
     }
 
     @Transactional
-    public LoanCreateReponse updateLoan(Long loanId, LoanCreateRequest request) {
+    public LoanCreateResponse updateLoan(Long loanId, LoanCreateRequest request) {
 
         Loan loan = loanReponsitory.findById(loanId)
                 .orElseThrow(()-> new RuntimeException("Loan not found"));
-        double loanAmount = Double.parseDouble(request.getLoanamount());
+        double loanAmount = Double.parseDouble(request.getLoanAmount());
         loan.setLoanAmount(loanAmount);
         loan.setMonth(request.getMonth());
         loan.setCccd(request.getCccd());
 
-        User user = userReponsitory.findUsersById(request.getId())
-                .orElseThrow(()-> new RuntimeException("User not found"));
-
-        UserCreateResponse userCreateResponse = UserCreateResponse.builder()
-                .email(user.getEmail())
-                .name(user.getName())
-                .phone(user.getPhone())
-                .age(user.getAge())
-                .address(user.getAddress())
-                .build();
 
         loanReponsitory.save(loan);
 
-        return LoanCreateReponse.builder()
+        return LoanCreateResponse.builder()
                 .loanAmount(String.valueOf(loan.getLoanAmount()))
                 .month(loan.getMonth())
                 .cccd(loan.getCccd())
                 .interestRate(loan.getInterestRate())
                 .amountPayable(loan.getAmountPayable())
-                .MonthlyPaymentAmount(loan.getMonthlyPaymentAmount())
+                .monthlyPaymentAmount(loan.getMonthlyPaymentAmount())
                 .createDate(loan.getCreateDate())
                 .paymentDate(loan.getPaymentDate())
                 .status(loan.getStatus())
-                .UserInfor(userCreateResponse)
+                .user(loan.getUser())
                 .build();
     }
 

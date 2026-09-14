@@ -23,7 +23,7 @@ public class InterestRateService {
         return reponsitory.findAll();
     }
 
-    public void DeleteById(int id) {
+    public void deleteById(int id) {
         if(reponsitory.findById(id)==null){
             throw new RuntimeException("Id not found");
         }

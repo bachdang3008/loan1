@@ -1,7 +1,5 @@
 package com.example.loan.configuration;
-import com.example.loan.reponsitory.UserReponsitory;
 import com.example.loan.service.UserDetailService;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +22,8 @@ import javax.crypto.spec.SecretKeySpec;
 @Configuration
 @EnableAutoConfiguration
 @RequiredArgsConstructor
-public class Sconfiguration {
+public class SecurityConfiguration {
+
 
     public final UserDetailService userDetailService;
 
@@ -33,9 +32,9 @@ public class Sconfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->authorizationManagerRequestMatcherRegistry
-                        .requestMatchers(HttpMethod.POST,"/users/post").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/interestrate/post").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/login").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/login","/users").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/users","/").hasAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/interest-rate/").hasAuthority("SCOPE_ADMIN")
                         .anyRequest().authenticated()
                 )
 

@@ -13,13 +13,13 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 
-public class LoanCreateReponse {
+public class LoanCreateResponse {
     private String loanAmount;
     private String month;
     private String cccd;
     private double interestRate ;
     private double amountPayable ;
-    private double MonthlyPaymentAmount;
+    private double monthlyPaymentAmount;
     private LocalDate createDate;
     private LocalDate paymentDate ;
     private String status;

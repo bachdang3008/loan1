@@ -9,8 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class LoanCreateRequest {
-    private String loanamount;
+    private String loanAmount;
     private String month;
     private String cccd;
-    private Long id;
 }
